@@ -46,30 +46,69 @@ This process for building a model which can detect the disease assocaited with t
    The model was tested on total 14155 images of 15 classes.<br/>
 
 
-## Technical Approach :
+🧠 Technical Approach
 
-    ➢📸Data Collection:
- Capture wheat images (healthy 🌿& diseased 🍂) via mobile, drones 
-�
-�, and satellites 🛰️with GPS tagging.
- ➢🧹Image Preprocessing:
- Clean, resize, and enhance images ✨using data augmentation for 
-better accuracy.
- ➢🤖AI/ML Model:
- Train CNN-based model (MobileNet/ YOLOv8) 🧠for early and precise 
-disease detection.
- ➢🌍Drone & Satellite Integration:
- Use NDVI and aerial imagery to monitor large-scale crop health 🌾.
- ➢☁️Cloud & Backend:
- Store data securely 🔒and process real-time inferences through APIs 
-⚙️.
- ➢📱Mobile/Web App:
- Farmers get instant results ⚡and visual disease maps 🗺️for easy 
-understanding.
- ➢🚨Alert & Advisory System:
- Send location-based alerts 📍with preventive tips 💡and heatmaps 
-�
-�for timely action
+The Wheat Disease Detection System leverages deep learning and computer vision to identify wheat crop diseases from leaf images and recommend suitable pesticides and treatments.
+
+1. Overview
+
+This project uses a MobileNetV2 convolutional neural network model fine-tuned on a labeled wheat disease dataset. The model predicts the disease class from an uploaded image and returns a treatment recommendation with estimated cost and dosage through a web-based interface.
+
+2. Data Collection and Preprocessing
+
+Dataset Source: Kaggle Wheat Disease Dataset (containing multiple classes such as Healthy, Rust, Blight, etc.)
+
+Data Cleaning: Removal of corrupted and duplicate images
+
+Image Preprocessing:
+
+Resized to 224×224 pixels
+
+Normalized using ImageNet mean and standard deviation
+
+Augmentation applied: rotation, flipping, brightness adjustment, and zoom for better generalization
+
+3. Model Development
+
+Architecture: MobileNetV2 (lightweight CNN suitable for edge devices)
+
+Transfer Learning:
+
+Pretrained on ImageNet
+
+Final classification layer modified for wheat disease classes
+
+Training Parameters:
+
+Optimizer: Adam
+
+Learning Rate: 0.001
+
+Batch Size: 32
+
+Epochs: 20–30
+
+Loss Function: CrossEntropyLoss
+
+Performance Metrics: Accuracy, Precision, Recall, F1-Score
+
+4. Model Evaluation
+
+Validation performed on 10–20% of data split
+
+Achieved high accuracy on major disease classes
+
+Generated a confusion matrix to visualize misclassifications
+
+5. Backend (Inference API)
+
+Framework: FastAPI (Python)
+
+Model Framework: PyTorch
+
+Endpoint: /predict accepts image input and returns disease prediction + treatment info
+
+Deployment: Backend hosted on Render
 
 
 

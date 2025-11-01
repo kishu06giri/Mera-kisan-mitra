@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Wheat Disease Detector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1:#0f172a; /* deep indigo */
+      --bg2:#05264a; /* navy */
+      --glass: rgba(255,255,255,0.06);
+      --accent1:#f59e0b; /* amber */
+      --accent2:#10b981; /* emerald */
+      --muted: #94a3b8;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Arial,sans-serif;margin:0;min-height:100vh;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#e6eef8;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{width:100%;max-width:980px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:18px;box-shadow:0 10px 40px rgba(2,6,23,0.6);backdrop-filter: blur(6px);padding:22px;display:grid;grid-template-columns:1fr 380px;gap:20px}
+    header h1{margin:0;font-size:20px;letter-spacing:0.2px}
+    header p{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+    /* drop area */
+    .drop{border:2px dashed rgba(255,255,255,0.06);border-radius:12px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:all .18s}
+    .drop:hover{transform:translateY(-4px)}
+    .drop.drag{border-color:rgba(255,255,255,0.12);box-shadow:0 6px 30px rgba(0,0,0,0.5)}
+    .icon{width:64px;height:64px;border-radius:12px;display:inline-grid;place-items:center;background:linear-gradient(135deg,var(--accent1),var(--accent2));box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+    .muted{color:var(--muted);font-size:13px}
+
+    .controls{display:flex;gap:10px;margin-top:12px;align-items:center}
+    .btn{background:linear-gradient(90deg,var(--accent1),#f97316);border:none;padding:10px 14px;border-radius:10px;color:#07203b;font-weight:600;cursor:pointer;box-shadow:0 8px 24px rgba(245,158,11,0.12);transition:transform .12s}
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04)}
+
+    /* right column */
+    .preview{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));border-radius:12px;padding:12px;min-height:320px;display:flex;flex-direction:column;align-items:center;gap:12px}
+    .preview img{max-width:100%;max-height:260px;border-radius:10px;object-fit:contain}
+    .result{width:100%;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:10px;padding:12px}
+    .bar{height:12px;border-radius:999px;background:rgba(255,255,255,0.04);overflow:hidden}
+    .bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent1));}
+    .small{font-size:13px;color:var(--muted)}
+
+    footer{grid-column:1/-1;margin-top:12px;color:var(--muted);font-size:13px;text-align:center}
+
+    @media(max-width:980px){.card{grid-template-columns:1fr;}.preview{min-height:220px}.controls{flex-wrap:wrap}}
+
+    /* subtle animation */
+    .pulse{animation:pulse 2s infinite}
+    @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+
+    .loading-dot{display:inline-block;width:8px;height:8px;margin-left:6px;border-radius:50%;background:#fff;opacity:0.85;animation:ld 1s infinite}
+    @keyframes ld{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div>
+      <header style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
+        <div style="width:56px;height:56px;border-radius:12px;background:linear-gradient(90deg,var(--accent2),var(--accent1));display:grid;place-items:center;color:#07203b;font-weight:700">W</div>
+        <div>
+          <h1>Wheat Disease Detector</h1>
+          <p>Fast, simple disease detection — upload a leaf photo and get predictions.</p>
+        </div>
+      </header>
+
+      <div id="drop" class="drop" tabindex="0">
+        <div class="icon">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#07203b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5-5 5 5"/><path d="M12 5v10"/></svg>
+        </div>
+        <div style="margin-top:6px;font-weight:600;color:#e6eef8">Drop an image here</div>
+        <div class="muted">Or click to choose • JPG/PNG • close-up of single leaf works best</div>
+        <input id="file" type="file" accept="image/*" style="display:none" />
+      </div>
+
+      <div class="controls">
+        <button id="predictBtn" class="btn">Predict</button>
+        <button id="clearBtn" class="btn secondary">Clear</button>
+        <div style="margin-left:auto" class="small">Backend: <strong style="color:var(--accent2)">https://wheat-backend.onrender.com</strong></div>
+      </div>
+
+      <div id="status" class="small" style="margin-top:10px;color:var(--muted)"></div>
+
+      <div style="margin-top:14px;">
+        <div class="result" id="infoBox" style="display:none"></div>
+      </div>
+    </div>
+
+    <aside class="preview">
+      <div style="width:100%;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:700">Preview</div>
+        <div class="small">Image preview & confidence</div>
+      </div>
+      <div id="previewWrap" style="width:100%;display:grid;place-items:center;min-height:220px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:8px">
+        <div id="empty" class="small" style="color:var(--muted);text-align:center">No image selected</div>
+      </div>
+
+      <div id="predictionsList" style="width:100%;margin-top:8px;display:none"></div>
+
+      <div style="width:100%;display:flex;gap:8px;margin-top:12px">
+        <div style="flex:1;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;text-align:center">
+          <div style="font-size:13px;color:var(--muted)">Model</div>
+          <div style="font-weight:700">MobileNetV2</div>
+        </div>
+        <div style="flex:1;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;text-align:center">
+          <div style="font-size:13px;color:var(--muted)">Mode</div>
+          <div style="font-weight:700">Server</div>
+        </div>
+      </div>
+    </aside>
+
+    <footer>Disclaimer: this model provides automated predictions. Confirm with a local agronomist before taking action.</footer>
+  </div>
+
+<script>
+const BACKEND = 'https://wheat-backend.onrender.com/predict';
+const drop = document.getElementById('drop');
+const fileInput = document.getElementById('file');
+const predictBtn = document.getElementById('predictBtn');
+const clearBtn = document.getElementById('clearBtn');
+const previewWrap = document.getElementById('previewWrap');
+const empty = document.getElementById('empty');
+const status = document.getElementById('status');
+const infoBox = document.getElementById('infoBox');
+const predictionsList = document.getElementById('predictionsList');
+let selectedFile = null;
+
+function setStatus(text){ status.textContent = text }
+
+// drag events
+['dragenter','dragover'].forEach(ev => {
+  drop.addEventListener(ev, (e)=>{ e.preventDefault(); drop.classList.add('drag'); setStatus('Drop to upload') });
+});
+['dragleave','drop'].forEach(ev => {
+  drop.addEventListener(ev, (e)=>{ e.preventDefault(); drop.classList.remove('drag'); setStatus('') });
+});
+
+// drop handler
+drop.addEventListener('drop', (e)=>{
+  e.preventDefault();
+  const f = e.dataTransfer.files && e.dataTransfer.files[0];
+  if(f) handleFile(f);
+});
+
+// click to open
+drop.addEventListener('click', ()=> fileInput.click());
+fileInput.addEventListener('change', ()=> {
+  const f = fileInput.files[0]; if(f) handleFile(f);
+});
+
+function handleFile(file){
+  selectedFile = file;
+  empty.style.display='none';
+  previewWrap.innerHTML = '';
+  const img = document.createElement('img');
+  img.src = URL.createObjectURL(file);
+  img.onload = ()=> URL.revokeObjectURL(img.src);
+  previewWrap.appendChild(img);
+  predictionsList.style.display = 'none';
+  infoBox.style.display = 'none';
+}
+
+clearBtn.addEventListener('click', ()=>{
+  selectedFile = null; previewWrap.innerHTML = '<div id="empty" class="small" style="color:var(--muted);text-align:center">No image selected</div>'; predictionsList.style.display='none'; infoBox.style.display='none'; setStatus(''); fileInput.value='';
+});
+
+predictBtn.addEventListener('click', async ()=>{
+  if(!selectedFile){ setStatus('Choose an image first'); return }
+  setStatus('Uploading image...')
+  predictBtn.disabled = true; predictBtn.textContent = 'Predicting...';
+  try{
+    const fd = new FormData(); fd.append('file', selectedFile);
+    const res = await fetch(BACKEND, { method:'POST', body: fd });
+    if(!res.ok){ const txt = await res.text(); throw new Error('Server error: ' + res.status + ' ' + txt); }
+    const j = await res.json();
+    renderPredictions(j.predictions || []);
+    setStatus('Done');
+  }catch(err){
+    console.error(err); setStatus('Error: ' + err.message); infoBox.style.display='block'; infoBox.textContent = err.message;
+  }finally{ predictBtn.disabled = false; predictBtn.textContent = 'Predict' }
+});
+
+function renderPredictions(list){
+  predictionsList.innerHTML = '';
+  if(!list || list.length===0){ predictionsList.innerHTML = '<div class="small" style="color:var(--muted)">No predictions returned</div>'; predictionsList.style.display='block'; return }
+  list.forEach(item => {
+    const wrap = document.createElement('div'); wrap.style.marginBottom='10px';
+    const title = document.createElement('div'); title.style.display='flex'; title.style.justifyContent='space-between'; title.style.alignItems='center';
+    const name = document.createElement('div'); name.style.fontWeight='700'; name.textContent = item.class;
+    const conf = document.createElement('div'); conf.style.color='var(--muted)'; conf.textContent = (item.confidence*100).toFixed(2) + '%';
+    title.appendChild(name); title.appendChild(conf);
+    const barWrap = document.createElement('div'); barWrap.className='bar'; barWrap.style.marginTop='8px';
+    const bar = document.createElement('i'); bar.style.width = Math.max(4, Math.min(100, item.confidence*100)) + '%';
+    barWrap.appendChild(bar);
+    wrap.appendChild(title); wrap.appendChild(barWrap);
+    predictionsList.appendChild(wrap);
+  });
+  predictionsList.style.display='block';
+  infoBox.style.display='block'; infoBox.textContent = 'Top prediction shown. Please verify with an agronomist for critical decisions.';
+}
+</script>
+</body>
+</html>

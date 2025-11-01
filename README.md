@@ -44,6 +44,40 @@ This process for building a model which can detect the disease assocaited with t
 4. Testing
 
    The model was tested on total 14155 images of 15 classes.<br/>
+
+
+## Technical Approach :
+
+    ➢📸Data Collection:
+ Capture wheat images (healthy 🌿& diseased 🍂) via mobile, drones 
+�
+�, and satellites 🛰️with GPS tagging.
+ ➢🧹Image Preprocessing:
+ Clean, resize, and enhance images ✨using data augmentation for 
+better accuracy.
+ ➢🤖AI/ML Model:
+ Train CNN-based model (MobileNet/ YOLOv8) 🧠for early and precise 
+disease detection.
+ ➢🌍Drone & Satellite Integration:
+ Use NDVI and aerial imagery to monitor large-scale crop health 🌾.
+ ➢☁️Cloud & Backend:
+ Store data securely 🔒and process real-time inferences through APIs 
+⚙️.
+ ➢📱Mobile/Web App:
+ Farmers get instant results ⚡and visual disease maps 🗺️for easy 
+understanding.
+ ➢🚨Alert & Advisory System:
+ Send location-based alerts 📍with preventive tips 💡and heatmaps 
+�
+�for timely action
+
+
+
+## Team Details :
+
+   1. Abhishek Kahate : ECE first year ,  Priyadarshini College of Engineering , Nagpur.
+   2. Tanhvi Shanware : ECE first year ,  Priyadarshini College of Engineering , Nagpur.
+   3. Krish Giri      : CSE Second Year , Jagadambha College of Engineering , Yavatmal . 
  
 
 

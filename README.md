@@ -79,17 +79,3 @@ All the version with code can be seen in `jovian.ml` (https://jovian.ml/soumyaji
 - `Src` : All The source code for building models
 - `Models` : All the Pretrained Models of Pytorch
 
-## License
-
-This project is Licensed under `MIT`
-
-## Explanation
-
-`To understand the code :` You can find the complete explanation to the code in [Article](https://medium.com/@soumyajit4419/plant-ai-c8fc95ed90e6?source=friends_link&sk=4707825cbaefa2dcaaa92d0e3ed5de01)
-
-
-### Show your support
-
-Give a ⭐ if you like this website!
-
-<a href="https://www.buymeacoffee.com/soumyajit4419" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-violet.png" alt="Buy Me A Coffee" height= "60px" width= "217px" ></a>
